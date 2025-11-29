@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dispensador Mascotas 🐾</title>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-database.js";
+
+  // Tu configuración real de Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBYfUKLkLS0VLZ2TaPgIBIiLzoohHu4u0o",
+    authDomain: "dispensadorir501.firebaseapp.com",
+    databaseURL: "https://dispensadorir501-default-rtdb.firebaseio.com",
+    projectId: "dispensadorir501",
+    storageBucket: "dispensadorir501.firebasestorage.app",
+    messagingSenderId: "326247833050",
+    appId: "1:326247833050:web:c862e972187e96f421f4e3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Cuando se presiona el botón
+  function activarMotor() {
+    set(ref(db, "dispensador/comando"), "ON");
+
+    document.getElementById("msg").innerHTML = "Dispensando comida… 🥣";
+
+    // Después de 2 segundos, desactivar
+    setTimeout(() => {
+      set(ref(db, "dispensador/comando"), "OFF");
+      document.getElementById("msg").innerHTML = "Listo ✔";
+    }, 2000);
+  }
+
+  window.activarMotor = activarMotor;
+</script>
+
+<style>
+  body {
+    background: #fce5cd;
+    font-family: Arial;
+    text-align: center;
+    padding: 40px;
+  }
+
+  h1 {
+    font-size: 32px;
+    color: #6d4c41;
+  }
+
+  button {
+    background: #ffa726;
+    padding: 20px 45px;
+    color: white;
+    font-size: 24px;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 5px #c77800;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  button:active {
+    transform: translateY(5px);
+    box-shadow: 0 0 #c77800;
+  }
+
+  #msg {
+    margin-top: 20px;
+    font-size: 22px;
+    color: #4e342e;
+  }
+</style>
+
+</head>
+
+<body>
+
+<h1> Dispensador Automático de Comida </h1>
+
+<button onclick="activarMotor()">DAR COMIDA</button>
+
+<p id="msg"></p>
+
+</body>
+</html>
