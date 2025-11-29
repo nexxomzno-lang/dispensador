@@ -1,64 +1,81 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Dispensador de Comida</title>
-    <style>
-        body {
-            background: #f0f0f0;
-            font-family: Arial;
-            text-align: center;
-            padding-top: 50px;
-        }
+<meta charset="UTF-8">
+<title>Dispensador Remoto</title>
 
-        .btn {
-            background: #ff9800;
-            padding: 20px 50px;
-            color: white;
-            font-size: 28px;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-        .btn:hover {
-            background: #e68900;
-            transform: scale(1.05);
-        }
+<style>
+    body {
+        background: #f3f3f3;
+        font-family: Arial;
+        text-align: center;
+        padding-top: 60px;
+    }
 
-        #estado {
-            margin-top: 30px;
-            font-size: 22px;
-        }
-    </style>
+    .btn {
+        background: #ff9800;
+        padding: 20px 55px;
+        font-size: 30px;
+        border: none;
+        border-radius: 18px;
+        color: white;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn:hover {
+        background: #e68900;
+        transform: scale(1.05);
+    }
+
+    #estado {
+        margin-top: 30px;
+        font-size: 22px;
+    }
+</style>
 </head>
+
 <body>
 
-    <h1>Dispensador de Croquetas</h1>
+<h1>Dispensador de Croquetas</h1>
 
-    <button class="btn" onclick="dispensar()">🍖 DISPENSAR</button>
+<button class="btn" onclick="dispensar()">🍗 DISPENSAR</button>
 
-    <div id="estado"></div>
+<div id="estado"></div>
 
-    <script>
+<script>
+    // === TU CONFIGURACIÓN DE FIREBASE (ya pegada aquí) ===
+    const firebaseConfig = {
+      apiKey: "AIzaSyBYfUKLkLS0VLZ2TaPgIBIiLzoohHu4u0o",
+      authDomain: "dispensadorir501.firebaseapp.com",
+      databaseURL: "https://dispensadorir501-default-rtdb.firebaseio.com",
+      projectId: "dispensadorir501",
+      storageBucket: "dispensadorir501.firebasestorage.app",
+      messagingSenderId: "326247833050",
+      appId: "1:326247833050:web:c862e972187e96f421f4e3"
+    };
 
-        // ⚠️ PON AQUÍ LA IP QUE TE APARECE EN EL MONITOR SERIAL
-        const ESP32_IP = "http://192.168.1.67";
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-        function dispensar() {
-            document.getElementById("estado").innerHTML = "Dispensando...";
+    function dispensar() {
+        document.getElementById("estado").innerHTML = "Enviando comando...";
 
-            fetch(`${ESP32_IP}/dispensar`)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById("estado").innerHTML = "Comida dispensada ✔️";
-                })
-                .catch(error => {
-                    document.getElementById("estado").innerHTML = "Error: No se pudo conectar ❌";
-                });
-        }
-    </script>
+        // Escribir valor en Firebase
+        db.ref("dispensar").set(1);
+
+        setTimeout(() => {
+            db.ref("dispensar").set(0);
+        }, 1500);
+
+        document.getElementById("estado").innerHTML = "Croquetas dispensadas ✔️";
+    }
+</script>
 
 </body>
 </html>
+
